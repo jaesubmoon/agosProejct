@@ -2,7 +2,6 @@ package com.agos.agw.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import com.agos.agw.model.UserVO;
 
 public interface IUserService {
@@ -16,9 +15,9 @@ public interface IUserService {
 	void approveUser(UserVO userVO);
 	// 사용자 전체 조회
 	ArrayList<UserVO> listAllUser();
+	
 	// 대기자 조회
 	ArrayList<UserVO> listRequestUser();
 	// 사용자 검색
 	ArrayList<UserVO> searchUser(HashMap<String, Object> map);
-
 }

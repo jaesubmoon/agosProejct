@@ -41,11 +41,16 @@
 			}
 			
 			.tableSpace {
-				border: 1px solid black;
+				border: 2px solid black;
+			    background: gainsboro;
+			    padding-top: 8px;
+			    padding-bottom: 8px;
 			}
 			
 			.tableContentSpace {
-				border: 1px solid black;
+				border-bottom: 1px solid black;
+			    padding-top: 5px;
+			    padding-bottom: 5px;
 			}
 			
 			.tableCol {
@@ -70,12 +75,11 @@
 			}
 			
 			.tableSpace :nth-child(7n+3) {
-				width: 8%;
+				width: 11%;
 			}
 			
 			.tableSpace :nth-child(7n+4) {
 				width: 12%;
-				text-align: center;
 				margin-right: 3%;
 			}
 			
@@ -84,7 +88,7 @@
 			}
 			
 			.tableSpace :nth-child(7n+6) {
-				width: 18%;
+				width: 16%;
 			}
 			
 			.tableSpace :nth-child(7n+7) {
@@ -102,12 +106,11 @@
 			}
 			
 			.tableContentSpace :nth-child(7n+3) {
-				width: 8%;
+				width: 11%;
 			}
 			
 			.tableContentSpace :nth-child(7n+4) {
 				width: 12%;
-				text-align: center;
 				margin-right: 3%;
 			}
 			
@@ -116,7 +119,7 @@
 			}
 			
 			.tableContentSpace :nth-child(7n+6) {
-				width: 18%;
+				width: 16%;
 			}
 			
 			.tableContentSpace :nth-child(7n+7) {
@@ -129,7 +132,7 @@
 			
 			div#updateDelete {
 			    float: right;
-			    margin-top: 10px;
+			    margin-top: 460px;
 			}
 			
 			#updateBtn {
@@ -163,6 +166,7 @@
 						<button name="searchBtn">검색</button>
 					</span>
 				</div>
+				
 				<div id="tableWholeSpace">
 					<div class="tableSpace">
 						<span class="tableCol"><input type="checkbox" id="allCheck" name="allCheck" ></span>
@@ -173,23 +177,42 @@
 						<span class="tableCol">ID</span>
 						<span class="tableCol">E-mail</span>
 					</div>
-				
-					<c:forEach items="${userList }" var="user">
-						<div class="tableContentSpace">
-							<span class="tableCol"><input type="checkbox" name="rowCheck" value="${user.usr_idx }"></span>
-							<span class="tableCol">${user.usr_nm}</span>
-							<span class="tableCol">${user.usr_position}</span>
-							<span class="tableCol">${user.usr_right}</span>
-							<span class="tableCol">${user.usr_gender}</span>
-							<span class="tableCol">${user.usr_id}</span>
-							<span class="tableCol">${user.usr_email}</span>
+						<form method="post" onsubmit="updateSubmit()">
+							<c:forEach items="${userList }" var="user">
+								<div class="tableContentSpace">
+									<span class="tableCol"><input type="checkbox" name="rowCheck" value="${user.usr_idx }"></span>
+									<span class="tableCol">${user.usr_nm}</span>
+									<span class="tableCol">
+										<label for="usr_position">
+											<select id=usr_position name="usr_position">
+												<option value="${user.usr_position}">${user.usr_position}</option>
+												<option value="관리자">관리자</option>
+												<option value="사원">사원</option>
+											</select>
+										</label>
+									</span>
+									<span class="tableCol">
+										<label for="usr_right">
+											<select id="usr_right" name="usr_right">
+												<option value="${user.usr_right}">${user.usr_right}</option>
+												<option value="0">관리자</option>
+												<option value="1">일반</option>
+											</select>
+										</label>
+									</span>
+									<span class="tableCol">${user.usr_gender}</span>
+									<span class="tableCol">${user.usr_id}</span>
+									<span class="tableCol">${user.usr_email}</span>
+								</div>
+							</c:forEach> 
+							
+						<div id="updateDelete">
+							<input type="submit" id="updateBtn" value="수정">
+							<button id="deleteBtn">삭제</button>
 						</div>
-					</c:forEach> 
+					</form>
 				</div>
-				<div id="updateDelete">
-					<button id="updateBtn">수정</button>
-					<button id="deleteBtn">삭제</button>
-				</div>
+				<%-- ${userList } --%>
 			</div>
 		</div>
 	</body>
@@ -243,10 +266,10 @@
 				event.preventDefault();
 				
 				var chkArr = new Array();							// 체크된 행 배열을 넣을 새로운 배열
-				var list = $('input[name="rowCheck"]');			// name이 rowCheck인 모든 input의 value를 list에 넣는다
+				var list = $('input[name="rowCheck"]');			// name이 rowCheck인 모든 input값을 넣는다
 				for(var i = 0 ; i < list.length ; i++) {
 					if(list[i].checked) {									// 선택되어 있다면 chkArr 배열에 값을 저장
-						chkArr.push(list[i].value);
+						chkArr.push(list[i].value);						// list에 넣어둔 input의 value를 chkArr에 저장
 					}
 				}
 				
@@ -258,7 +281,7 @@
 					$.ajax({
 						url : "/agw/userSelectDelete",		// 컨트롤러에서 삭제로 이동
 						type : 'post',
-						traditional : true, // ajax의 배열값을 java단으로 넘길 때 true
+						traditional : true, // ajax의 배열값을 java단으로 넘길 때  traditional : true
 						data : {
 							chkArr : chkArr	 // 배열 값을 data로 java단으로 넘김
 						},
@@ -276,6 +299,41 @@
 				
 				
 			});
+			
+			/* // 수정 버튼 클릭시 (보류)
+			function updateSubmit() {
+				event.updateSubmit();
+				
+				List<VO> chkArr = new ArrayList<VO>();
+				var list = $('input[name="rowCheck"]');
+				for(var i = 0 ; i < list.length ; i++ ) {
+					if(list[i].checked) {
+						chkArr.push(${userList}[i]);				//VO값을 제대로 저장하고 있는지 확인이 필요함;;
+					}
+				}
+				
+				if(chkArr.length == 0) {
+					alert("선택된 항목이 없습니다.");
+					
+					$.ajax({
+						url : "/agw/approveUser",
+						type : 'post',
+						traditional : true,
+						data : {
+							chkArr : chkArr
+						},
+						success : function(jdata) {
+							if(jdata = 1) {
+								alert("수정 완료");
+								location.replace("UserAllList");
+							} else {
+								alert("수정 오류");
+							}
+						}
+					});
+				}
+				
+			} */
 			
 		});
 	

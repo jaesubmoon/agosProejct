@@ -1,13 +1,16 @@
 package com.agos.agw.service;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.agos.agw.dao.IUserDAO;
+
 import com.agos.agw.model.UserVO;
 
 @Service
@@ -46,16 +49,20 @@ public class UserService implements IUserService {
 		return dao.listAllUser();
 	}
 	
+	
 	@Override
 	public ArrayList<UserVO> listRequestUser() {
 		
 		return dao.listRequestUser();
 	}
+	
+	
 
 	@Override
 	public ArrayList<UserVO> searchUser(HashMap<String, Object> param) {
 		
 		return dao.searchUser(param);
 	}
+	
 
 }

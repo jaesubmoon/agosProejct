@@ -11,7 +11,7 @@ public class UserVO {
 	private String usr_email;
 	private Date usr_crea_date;
 	private String usr_position;
-	private int usr_right;
+	private String usr_right;
 	private int usr_appr;
 	
 	public String getUsr_idx() {
@@ -62,10 +62,10 @@ public class UserVO {
 	public void setUsr_position(String usr_position) {
 		this.usr_position = usr_position;
 	}
-	public int getUsr_right() {
+	public String getUsr_right() {
 		return usr_right;
 	}
-	public void setUsr_right(int usr_right) {
+	public void setUsr_right(String usr_right) {
 		this.usr_right = usr_right;
 	}
 	public int getUsr_appr() {

@@ -19,7 +19,11 @@
   	
   	<!-- 전체 사용자 조회 -->
   	<select id="listAllUser" resultMap="userResult">
-  		SELECT * FROM user_regist
+  		SELECT
+  			usr_idx, usr_id, usr_pw, usr_nm, usr_gender, usr_email, usr_crea_date, usr_position,
+			case usr_right when 0 then "관리자" else (case usr_right when 1 then "일반" end) end as usr_right,
+        	usr_appr
+        FROM user_regist
   	</select>
   	
   	<!-- 사용자 삭제 -->

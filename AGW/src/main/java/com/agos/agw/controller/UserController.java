@@ -1,6 +1,7 @@
 package com.agos.agw.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.agos.agw.model.UserVO;
 import com.agos.agw.service.UserService;
@@ -54,9 +54,10 @@ public class UserController {
 		return "redirect:/UserAllList";
 	}
 	
-//	// 사용자 승인
-//	@RequestMapping("/approveUser")
-//	public String approveUser(UserVO userVO) {
+//	// 사용자 선택 승인 ( 난이도가 있어서 보류)
+//	@RequestMapping(value="/userSelectApprove")
+//	public String userSelectApprove(HttpServletRequest request, UserVO userVO) throws Exception {
+//		List<UserVO> ajaxMsg = request.getParameterValues("chkArr")					// string[] 타입을 변환해야한다....
 //		service.approveUser(userVO);
 //		return "redirect:/UserAllList";
 //	}
