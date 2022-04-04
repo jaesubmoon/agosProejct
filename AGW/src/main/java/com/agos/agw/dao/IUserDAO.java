@@ -2,6 +2,9 @@ package com.agos.agw.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import com.agos.agw.model.PagingVO;
 import com.agos.agw.model.UserVO;
 
 public interface IUserDAO {
@@ -19,7 +22,20 @@ public interface IUserDAO {
 	
 	// 대기자 조회
 	ArrayList<UserVO> listRequestUser();
+	
 	// 사용자 검색
 	ArrayList<UserVO> searchUser(HashMap<String, Object> map);
+	
+	// 총 사용자 수
+	public int countUser();
+	
+	// 페이징 처리 
+	public List<UserVO> listUserPaging(PagingVO pagingvo);	
+	public List<UserVO> listRequestPaging(PagingVO pagingvo);
+	
+	// 검색
+	ArrayList<UserVO> userSearch(HashMap<String, Object> map);	// 사용자 검색
+	
+	public ArrayList<UserVO> userSearchPaging(PagingVO pagingvo); 	// 검색 후 페이징 처리
 	
 }

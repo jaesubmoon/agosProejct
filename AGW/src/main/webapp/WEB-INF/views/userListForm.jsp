@@ -7,13 +7,17 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>사원 조회 페이지</title>
-		<script src="././resources/js/jquery-3.6.0.min.js"></script>
+		<script src="<c:url value='/resources/js/jquery-3.6.0.min.js' />"></script>
 		<style type="text/css">
 		
 			html {
 			  /* 가로 스크롤 */
 				overflow: auto;
 				white-space: nowrap;
+			}
+			
+			a {
+				text-decoration : none;
 			}
 			
 			#title {
@@ -25,19 +29,24 @@
 				
 			}
 			
+			div#linkSearchBox {
+			    display: flex;
+			}
+			
 			#userListForm {
 				margin: 0 auto;
 				width: 1440px;
 			}
 			
 			#searchPlace{
-				float:  right;
+				margin-left: 1070px;
 			}
 			
 			#tableWholeSpace {
-			    border: 1px solid;
-			    height: 621px;
+			    border: 0px solid;
+			    height: 700px;
 			    margin-top: 10px;
+			    position: static;
 			}
 			
 			.tableSpace {
@@ -45,6 +54,10 @@
 			    background: gainsboro;
 			    padding-top: 8px;
 			    padding-bottom: 8px;
+			}
+			
+			#updateForm {
+				border: 1px solid;
 			}
 			
 			.tableContentSpace {
@@ -130,9 +143,18 @@
 				width: 13px !important;
 			}
 			
+			div#pageUpdateDelete {
+			 	position: absolute;
+			    margin-top: 15px;
+			    display: flex;
+			}
+			
+			.pagelist {
+			    margin-left: 10px;
+			}
+			
 			div#updateDelete {
-			    float: right;
-			    margin-top: 460px;
+			    margin-left: 1145px;
 			}
 			
 			#updateBtn {
@@ -156,15 +178,18 @@
 		</div>
 		<div id="wrap">
 			<div id="userListForm">
-				<div>
-					<span>
+				<div id="linkSearchBox">
+					<div>
 						<button>사원관리</button>
 						<button id="userRequestList">사원신청</button>
-					</span>
-					<span id="searchPlace">
-						<input type="text" name="userSearchBox" placeholder="id 또는 이름을 입력해주세요.">
-						<button name="searchBtn">검색</button>
-					</span>
+					</div>
+					<div id="searchPlace">
+						<form  name="searchForm" id="searchForm">	<!-- action에 공백으로 주면 현재 페이지 주소까지 넣은것과 같다. -->
+						  <input type="hidden" name="nowPage" value="1">
+						  <input type="text" name="searchKeyword" id="searchKeyword" placeholder="검색어를 입력해주세요" >
+						  <input type="submit" value="검색">
+					  	</form>	
+					</div>
 				</div>
 				
 				<div id="tableWholeSpace">
@@ -177,7 +202,7 @@
 						<span class="tableCol">ID</span>
 						<span class="tableCol">E-mail</span>
 					</div>
-						<form method="post" onsubmit="updateSubmit()">
+						<form id="updateForm" method="post" onsubmit="updateSubmit()">
 							<c:forEach items="${userList }" var="user">
 								<div class="tableContentSpace">
 									<span class="tableCol"><input type="checkbox" name="rowCheck" value="${user.usr_idx }"></span>
@@ -204,11 +229,31 @@
 									<span class="tableCol">${user.usr_id}</span>
 									<span class="tableCol">${user.usr_email}</span>
 								</div>
-							</c:forEach> 
-							
-						<div id="updateDelete">
-							<input type="submit" id="updateBtn" value="수정">
-							<button id="deleteBtn">삭제</button>
+							</c:forEach>
+						<div id="pageUpdateDelete">
+							<!-- 페이지 넘기기 -->
+							<div class="pagelist">
+								<c:if test="${paging.startPage != 1 }">
+									<a href="<c:url value='/UserAllList/?nowPage=${paging.startPage - 1 }&cntPerPage=${paging.cntPerPage}'/>">‹</a>
+								</c:if>
+								<c:forEach begin="${paging.startPage }" end="${paging.endPage }" var="p">
+									<c:choose>
+										<c:when test="${p == paging.nowPage }">
+											<b>${p }&emsp;</b>
+										</c:when>
+										<c:when test="${p != paging.nowPage }">
+											<a href="<c:url value='/UserAllList/?nowPage=${p }&cntPerPage=${paging.cntPerPage}'/>">${p }&emsp;</a>
+										</c:when>
+									</c:choose>
+								</c:forEach>
+								<c:if test="${paging.endPage != paging.lastPage }">
+									<a href="<c:url value='/UserAllList/?nowPage=${paging.endPage + 1 }&cntPerPage=${paging.cntPerPage}'/>">›</a>
+								</c:if>
+							</div>
+							<div id="updateDelete">
+								<input type="submit" id="updateBtn" value="수정">
+								<button id="deleteBtn">삭제</button>
+							</div>
 						</div>
 					</form>
 				</div>
@@ -219,17 +264,17 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			
-			
+			var urlRequest = "<c:url value='/userRequestList' />"
+		
 			// 사원 신청 목록 페이지 불러오기
 			$('#userRequestList').click(function() {
 				event.preventDefault();  // 새로고침 막기
 				
 				$.ajax({
 					type: "post",
-					url: "/agw/userRequestList",
+					url: urlRequest,
 					async: false,
 					data: {
-						
 					},
 					success:function(result) {
 						$("#wrap").html(result);
@@ -238,6 +283,38 @@
 						alert("전송 실패!");
 					}
 				})
+			});
+			
+			// 검색
+			$('#searchForm').on('submit', function(){
+				event.preventDefault();
+				
+				var urlSearch = "<c:url value='/userSearch' />"
+				
+				var searchType = $('#searchType').val();
+				var searchKeyword = $('#searchKeyword').val();
+				var nowPage = 1;
+				var cntPerPage = 20;  		
+				
+				//alert(searchType);
+				 $.ajax({
+					type: "post",
+					url: urlSearch,
+					//data:formData,	
+					data: {
+						'searchType':searchType,
+						'searchKeyword':searchKeyword,
+						'nowPage':nowPage,
+						'cntPerPage':cntPerPage
+					},				
+					success:function(result) {			
+						$("#userListForm").html(result);
+		
+					},
+					error:function(data, textStatus) {
+						alert("전송 실패!");
+					}
+				});		
 			});
 			
 			// 체크박스 설정
@@ -265,6 +342,8 @@
 			$('#deleteBtn').click(function() {
 				event.preventDefault();
 				
+				var urlDelete = "<c:url value='/userSelectDelete' />"
+				
 				var chkArr = new Array();							// 체크된 행 배열을 넣을 새로운 배열
 				var list = $('input[name="rowCheck"]');			// name이 rowCheck인 모든 input값을 넣는다
 				for(var i = 0 ; i < list.length ; i++) {
@@ -279,7 +358,7 @@
 					var chkDelete = confirm("정말로 삭제하시겠습니까?");
 					// alert(chkArr); 	배열에 입력된 값 확인
 					$.ajax({
-						url : "/agw/userSelectDelete",		// 컨트롤러에서 삭제로 이동
+						url : urlDelete,		// 컨트롤러에서 삭제로 이동
 						type : 'post',
 						traditional : true, // ajax의 배열값을 java단으로 넘길 때  traditional : true
 						data : {
@@ -288,7 +367,7 @@
 						success : function(jdata) {
 							if(jdata = 1) {
 								alert("삭제 완료");
-								location.replace("UserAllList")			// userListForm 새로고침
+								location.replace("")			// userListForm 새로고침
 							} else {
 								alert("삭제 오류");
 							}

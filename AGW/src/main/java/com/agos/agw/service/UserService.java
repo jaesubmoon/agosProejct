@@ -1,16 +1,15 @@
 package com.agos.agw.service;
 
 import java.util.ArrayList;
-
 import java.util.HashMap;
-
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.agos.agw.dao.IUserDAO;
-
+import com.agos.agw.model.PagingVO;
 import com.agos.agw.model.UserVO;
 
 @Service
@@ -59,10 +58,41 @@ public class UserService implements IUserService {
 	
 
 	@Override
-	public ArrayList<UserVO> searchUser(HashMap<String, Object> param) {
+	public ArrayList<UserVO> searchUser(HashMap<String, Object> map) {
 		
-		return dao.searchUser(param);
+		return dao.searchUser(map);
 	}
 	
+	@Override
+	public int countUser() {
+		
+		return dao.countUser();
+	}
+	
+	@Override
+	public List<UserVO> listUserPaging(PagingVO pagingvo) {
+		
+		
+		return dao.listUserPaging(pagingvo);
+	}
+	
+	@Override
+	public List<UserVO> listRequestPaging(PagingVO pagingvo) {
+		
+		
+		return dao.listRequestPaging(pagingvo);
+	}
+	
+	@Override
+	public ArrayList<UserVO> userSearch(HashMap<String, Object> map) {
+		
+		return dao.userSearch(map);
+	}
+	
+	@Override
+	public ArrayList<UserVO> userSearchPaging(PagingVO pagingvo) {
+		
+		return dao.userSearchPaging(pagingvo);
+	}
 
 }
