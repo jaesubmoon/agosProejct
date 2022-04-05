@@ -15,6 +15,10 @@
   		<result property="usr_position" column="usr_position" />
   		<result property="usr_right" column="usr_right" />
   		<result property="usr_appr" column="usr_appr" />
+  		<result property="usr_birth" column="usr_birth" />
+  		<result property="usr_phone" column="usr_phone" />
+  		<result property="usr_address" column="usr_address" />
+  		<result property="usr_phone2" column="usr_phone2" />
   	</resultMap>
   	
   	<!-- 전체 사용자 조회 -->
@@ -24,6 +28,7 @@
 			case usr_right when 0 then "관리자" else (case usr_right when 1 then "일반" end) end as usr_right,
         	usr_appr
         FROM user_regist
+        WHERE usr_appr = 1
   	</select>
   	
   	<!-- 총 사용자 수 계산 -->
@@ -41,6 +46,7 @@
 				SELECT @ROWNUM:=@ROWNUM +1 AS RN, Q.* 
 					FROM (
 							SELECT * FROM user_regist Q
+							  WHERE usr_appr = 1
 							)Q, (SELECT @ROWNUM:=0)A
 							)B
 					WHERE RN BETWEEN #{start} AND #{end}
@@ -54,6 +60,8 @@
         	usr_appr
         FROM user_regist
         WHERE usr_id LIKE CONCAT('%', #{searchKeyword}, '%')
+        OR usr_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+        AND usr_appr=1
   	</select>
   	
   	<!-- 검색 후 페이징 유지 -->
@@ -66,12 +74,20 @@
 			SELECT @ROWNUM:=@ROWNUM +1 AS RN, Q.* 
 				FROM (
 						SELECT * FROM user_regist Q
-						WHERE usr_id LIKE CONCAT('%', #{searchKeyword}, '%') 
+							WHERE usr_id LIKE CONCAT('%', #{searchKeyword}, '%')
+        					OR usr_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+        					AND usr_appr=1
 						)Q, (SELECT @ROWNUM:=0)A
 						)B
 				WHERE RN BETWEEN #{start} AND #{end}
 				
   	</select>
+  	
+  	<!-- 사용자 수정 -->
+  	<update id="updateUser" parameterType="com.agos.agw.model.UserVO">
+  		UPDATE user_regist SET usr_position =#{usr_position}, usr_right =#{usr_right}
+  			WHERE usr_idx = #{usr_idx}
+  	</update>
   	
   	<!-- 사용자 삭제 -->
   	<delete id="deleteUser" parameterType="string">
@@ -80,12 +96,19 @@
   	
   	<!-- 승인 여부 값이 0인 승인 대기자만 조회 -->
   	<select id="listRequestUser" resultMap="userResult">
-  		SELECT * FROM user_regist WHERE usr_appr= 0
+  		SELECT 
+  			usr_idx, usr_id, usr_pw, usr_nm, usr_gender, usr_email, usr_crea_date, usr_position,
+			case usr_right when 0 then "관리자" else (case usr_right when 1 then "일반" end) end as usr_right,
+        	usr_appr, usr_birth, usr_phone, usr_address, usr_phone2
+        FROM user_regist WHERE usr_appr= 0
   	</select>
   	
   	<!-- 승인 여부 값이 0인 승인 대기자만 조회 + 페이징 -->
   	<select id="listRequestPaging" parameterType="hashMap"  resultMap="userResult">
-  		SELECT * 
+  		SELECT 
+  			usr_idx, usr_id, usr_pw, usr_nm, usr_gender, usr_email, usr_crea_date, usr_position,
+			case usr_right when 0 then "관리자" else (case usr_right when 1 then "일반" end) end as usr_right,
+        	usr_appr, usr_birth, usr_phone, usr_address, usr_phone2
   		FROM (
 				SELECT @ROWNUM:=@ROWNUM +1 AS RN, Q.* 
 					FROM (
@@ -98,7 +121,8 @@
   	
   	<!-- 사용자 승인 : 승인 여부 값을 0에서 1로 업데이트 + 데이터 업데이트 -->
   	<update id="approveUser" parameterType="com.agos.agw.model.UserVO">
-  		UPDATE user_regist SET usr_position = #{usr_position}, usr_right = #{usr_right}, usr_appr = 1
+  		UPDATE user_regist SET usr_position =#{usr_position}, usr_right =#{usr_right}, usr_appr = 1
+  			WHERE usr_idx = #{usr_idx}
   	</update>
   
   </mapper>

@@ -2,6 +2,7 @@ package com.agos.agw.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -61,8 +62,9 @@ public class UserController {
 		
 		System.out.println("---------------------------------------");
 		
-		if(searchType == null)
-			searchType = "";
+		/*
+		 * if(searchType == null) searchType = "";
+		 */
 		if(searchKeyword == null)
 			searchKeyword = "";
 		
@@ -75,7 +77,7 @@ public class UserController {
 			  cntPerPage = "20"; }
 		 
 		 HashMap<String,Object> param = new HashMap<String,Object>();
-		 param.put("searchType", searchType);
+		 //param.put("searchType", searchType);
 		 param.put("searchKeyword", searchKeyword);
 		
 		 ArrayList<UserVO> userList = service.userSearch(param);
@@ -87,7 +89,7 @@ public class UserController {
 		 
 		 PagingVO paging = new PagingVO(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
 		 
-		 paging.setSearchType((String)param.get("searchType"));
+		 //paging.setSearchType((String)param.get("searchType"));
 		 paging.setSearchKeyword((String)param.get("searchKeyword"));
 		 
 		 System.out.println(paging.getSearchKeyword());		// test
@@ -106,7 +108,7 @@ public class UserController {
 		 model.addAttribute("paging", paging);
 		 model.addAttribute("userList", service.userSearchPaging(paging));
 			
-		 model.addAttribute("searchType", (String)param.get("searchType"));
+		 //model.addAttribute("searchType", (String)param.get("searchType"));
 		 model.addAttribute("searchKeyword", (String)param.get("searchKeyword"));
 		 
 		 
@@ -156,16 +158,66 @@ public class UserController {
 		String[] ajaxMsg = request.getParameterValues("chkArr");						//문자 배열에 받아온 data를 뿌린다
 		int size = ajaxMsg.length;																	//배열 크기만큼 삭제 반복
 		for(int i = 0 ; i < size ; i++) {
-			service.deleteUser(ajaxMsg[i]);															//ajaxMsg 배열에 usr_idx값이 들어있다
+			service.deleteUser(ajaxMsg[i]);														//ajaxMsg 배열에 usr_idx값이 들어있다
 		}
 		return "redirect:/UserAllList";
 	}
 	
-//	// 사용자 선택 승인 ( 난이도가 있어서 보류)
-//	@RequestMapping(value="/userSelectApprove")
-//	public String userSelectApprove(HttpServletRequest request, UserVO userVO) throws Exception {
-//		List<UserVO> ajaxMsg = request.getParameterValues("chkArr")					// string[] 타입을 변환해야한다....
-//		service.approveUser(userVO);
-//		return "redirect:/UserAllList";
-//	}
+	
+	  // 사용자 선택 수정 
+	  @RequestMapping(value="/userSelectUpdate")
+	  public String userSelectUpdate(HttpServletRequest request) throws Exception {
+		  
+		 UserVO vo = new UserVO();
+		  
+		 String[] ajaxIdx = request.getParameterValues("idxArr");
+		 String[] ajaxPosition = request.getParameterValues("positionArr");
+		 String[] ajaxRight = request.getParameterValues("rightArr");
+		
+		 int size = ajaxIdx.length;
+		 
+		 //System.out.println("size : " + size);	// 선택 개수 확인
+		 
+		 for(int i = 0 ; i < size ; i ++) {
+			 
+			vo.setUsr_idx(ajaxIdx[i]);
+			vo.setUsr_position(ajaxPosition[i]);
+			vo.setUsr_right(ajaxRight[i]);
+			
+			//System.out.println("vo : " + vo);  // vo set 확인
+			
+			service.updateUser(vo);
+		 }
+	
+		  return "redirect:/UserAllList";
+	  }
+	  
+	  // 사용자 요청 선택 승인
+	  @RequestMapping(value="/userSelectApprove")
+	  public String userSelectApprove(HttpServletRequest request) throws Exception {
+		  
+		 UserVO vo = new UserVO();
+		  
+		 String[] ajaxIdx = request.getParameterValues("idxArr");
+		 String[] ajaxPosition = request.getParameterValues("positionArr");
+		 String[] ajaxRight = request.getParameterValues("rightArr");
+		
+		 int size = ajaxIdx.length;
+		 
+		 //System.out.println("size : " + size);	// 선택 개수 확인
+		 
+		 for(int i = 0 ; i < size ; i ++) {
+			 
+			vo.setUsr_idx(ajaxIdx[i]);
+			vo.setUsr_position(ajaxPosition[i]);
+			vo.setUsr_right(ajaxRight[i]);
+			
+			//System.out.println("vo : " + vo);  // vo set 확인
+			
+			service.approveUser(vo);
+		 }
+	
+		  return "redirect:/UserAllList";
+	  }
+	 
 }

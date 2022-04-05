@@ -43,10 +43,17 @@
 			}
 			
 			#tableWholeSpace {
-			    border: 0px solid;
 			    height: 700px;
 			    margin-top: 10px;
 			    position: static;
+			}
+			
+			#tableWholeContent {
+				border: 1px solid;
+			}
+			
+			#tableWholeContent :nth-child(2n) {
+				background: #efefef;
 			}
 			
 			.tableSpace {
@@ -116,6 +123,7 @@
 			.tableContentSpace :nth-child(7n+2) {
 				width: 5%;
 				margin-right: 50px;
+				background: transparent !important;
 			}
 			
 			.tableContentSpace :nth-child(7n+3) {
@@ -125,6 +133,7 @@
 			.tableContentSpace :nth-child(7n+4) {
 				width: 12%;
 				margin-right: 3%;
+				background: transparent !important;
 			}
 			
 			.tableContentSpace :nth-child(7n+5) {
@@ -133,6 +142,7 @@
 			
 			.tableContentSpace :nth-child(7n+6) {
 				width: 16%;
+				background: transparent !important;
 			}
 			
 			.tableContentSpace :nth-child(7n+7) {
@@ -186,23 +196,22 @@
 					<div id="searchPlace">
 						<form  name="searchForm" id="searchForm">	<!-- action에 공백으로 주면 현재 페이지 주소까지 넣은것과 같다. -->
 						  <input type="hidden" name="nowPage" value="1">
-						  <input type="text" name="searchKeyword" id="searchKeyword" placeholder="검색어를 입력해주세요" >
+						  <input type="text" name="searchKeyword" id="searchKeyword" placeholder="ID 또는 이름을 입력해주세요." >
 						  <input type="submit" value="검색">
 					  	</form>	
 					</div>
 				</div>
-				
-				<div id="tableWholeSpace">
-					<div class="tableSpace">
-						<span class="tableCol"><input type="checkbox" id="allCheck" name="allCheck" ></span>
-						<span class="tableCol">이름</span>
-						<span class="tableCol">직급</span>
-						<span class="tableCol">권한</span>
-						<span class="tableCol">성별</span>
-						<span class="tableCol">ID</span>
-						<span class="tableCol">E-mail</span>
-					</div>
-						<form id="updateForm" method="post" onsubmit="updateSubmit()">
+					<div id="tableWholeSpace">
+						<div class="tableSpace">
+							<span class="tableCol"><input type="checkbox" id="allCheck" name="allCheck" ></span>
+							<span class="tableCol">이름</span>
+							<span class="tableCol">직급</span>
+							<span class="tableCol">권한</span>
+							<span class="tableCol">성별</span>
+							<span class="tableCol">ID</span>
+							<span class="tableCol">E-mail</span>
+						</div>
+						<div id="tableWholeContent">
 							<c:forEach items="${userList }" var="user">
 								<div class="tableContentSpace">
 									<span class="tableCol"><input type="checkbox" name="rowCheck" value="${user.usr_idx }"></span>
@@ -230,32 +239,32 @@
 									<span class="tableCol">${user.usr_email}</span>
 								</div>
 							</c:forEach>
-						<div id="pageUpdateDelete">
-							<!-- 페이지 넘기기 -->
-							<div class="pagelist">
-								<c:if test="${paging.startPage != 1 }">
-									<a href="<c:url value='/UserAllList/?nowPage=${paging.startPage - 1 }&cntPerPage=${paging.cntPerPage}'/>">‹</a>
-								</c:if>
-								<c:forEach begin="${paging.startPage }" end="${paging.endPage }" var="p">
-									<c:choose>
-										<c:when test="${p == paging.nowPage }">
-											<b>${p }&emsp;</b>
-										</c:when>
-										<c:when test="${p != paging.nowPage }">
-											<a href="<c:url value='/UserAllList/?nowPage=${p }&cntPerPage=${paging.cntPerPage}'/>">${p }&emsp;</a>
-										</c:when>
-									</c:choose>
-								</c:forEach>
-								<c:if test="${paging.endPage != paging.lastPage }">
-									<a href="<c:url value='/UserAllList/?nowPage=${paging.endPage + 1 }&cntPerPage=${paging.cntPerPage}'/>">›</a>
-								</c:if>
-							</div>
-							<div id="updateDelete">
-								<input type="submit" id="updateBtn" value="수정">
-								<button id="deleteBtn">삭제</button>
-							</div>
 						</div>
-					</form>
+					<div id="pageUpdateDelete">
+						<!-- 페이지 넘기기 -->
+						<div class="pagelist">
+							<c:if test="${paging.startPage != 1 }">
+								<a href="<c:url value='/UserAllList/?nowPage=${paging.startPage - 1 }&cntPerPage=${paging.cntPerPage}'/>">‹</a>
+							</c:if>
+							<c:forEach begin="${paging.startPage }" end="${paging.endPage }" var="p">
+								<c:choose>
+									<c:when test="${p == paging.nowPage }">
+										<b>${p }&emsp;</b>
+									</c:when>
+									<c:when test="${p != paging.nowPage }">
+										<a href="<c:url value='/UserAllList/?nowPage=${p }&cntPerPage=${paging.cntPerPage}'/>">${p }&emsp;</a>
+									</c:when>
+								</c:choose>
+							</c:forEach>
+							<c:if test="${paging.endPage != paging.lastPage }">
+								<a href="<c:url value='/UserAllList/?nowPage=${paging.endPage + 1 }&cntPerPage=${paging.cntPerPage}'/>">›</a>
+							</c:if>
+						</div>
+						<div id="updateDelete">
+							<button id="updateBtn">수정</button>
+							<button id="deleteBtn">삭제</button>
+						</div>
+					</div>
 				</div>
 				<%-- ${userList } --%>
 			</div>
@@ -300,6 +309,7 @@
 				 $.ajax({
 					type: "post",
 					url: urlSearch,
+					async: false,
 					//data:formData,	
 					data: {
 						'searchType':searchType,
@@ -308,7 +318,7 @@
 						'cntPerPage':cntPerPage
 					},				
 					success:function(result) {			
-						$("#userListForm").html(result);
+						$("#tableWholeSpace").html(result);
 		
 					},
 					error:function(data, textStatus) {
@@ -356,6 +366,8 @@
 					alert("선택된 항목이 없습니다.");
 				} else {
 					var chkDelete = confirm("정말로 삭제하시겠습니까?");
+					
+					if(chkDelete) {
 					// alert(chkArr); 	배열에 입력된 값 확인
 					$.ajax({
 						url : urlDelete,		// 컨트롤러에서 삭제로 이동
@@ -372,49 +384,82 @@
 								alert("삭제 오류");
 							}
 						}
-						
 					})
-				}
-				
-				
-			});
-			
-			/* // 수정 버튼 클릭시 (보류)
-			function updateSubmit() {
-				event.updateSubmit();
-				
-				List<VO> chkArr = new ArrayList<VO>();
-				var list = $('input[name="rowCheck"]');
-				for(var i = 0 ; i < list.length ; i++ ) {
-					if(list[i].checked) {
-						chkArr.push(${userList}[i]);				//VO값을 제대로 저장하고 있는지 확인이 필요함;;
+					} else {
+						
 					}
 				}
-				
-				if(chkArr.length == 0) {
-					alert("선택된 항목이 없습니다.");
-					
-					$.ajax({
-						url : "/agw/approveUser",
-						type : 'post',
-						traditional : true,
-						data : {
-							chkArr : chkArr
-						},
-						success : function(jdata) {
-							if(jdata = 1) {
-								alert("수정 완료");
-								location.replace("UserAllList");
-							} else {
-								alert("수정 오류");
-							}
-						}
-					});
-				}
-				
-			} */
+			});
 			
-		});
+			 // 수정 버튼 클릭시_다중선택 업데이트 (선택 삭제 기능과 로직이 같다)
+			 $('#updateBtn').click(function() {
+				 event.preventDefault();
+				
+				 var urlUpdate = "<c:url value='/userSelectUpdate' />"
+				 
+				 var idxArr = new Array();
+				 var idxList = $('input[name="rowCheck"]');
+				 
+				 for(var i=0 ; i < idxList.length ; i++ ) {
+					 if(idxList[i].checked) {
+						 idxArr.push(idxList[i].value);
+					 }
+				 }
+				 
+				 var positionArr = new Array();
+				 var positionList = $('select[name="usr_position"]');
+				 
+				 for(var i=0 ; i < positionList.length ; i++ ) {
+					if(idxList[i].checked) {
+						 positionArr.push(positionList[i].value);
+					}
+				 }
+				 
+				 var rightArr = new Array();
+				 var rightList = $('select[name="usr_right"]');
+				 
+				 for(var i=0 ; i < rightList.length ; i++ ) {
+					if(idxList[i].checked) {
+						 rightArr.push(rightList[i].value);
+					 }
+				 }
+				 
+				 if(idxArr.length == 0) {			// 체크된게 없어서 배열에 아무것도 들어가지 않았을 때
+					alert("선택된 항목이 없습니다.");
+				 } else {
+					 var chkUpdate = confirm("정말로 수정하시겠습니까?");
+					 
+					 if(chkUpdate) {
+					 
+					/*  alert(idxArr);
+					 alert(positionArr);
+					 alert(rightArr); */ // 넘겨주는 값 확인
+					 
+					 $.ajax({
+						 url : urlUpdate,
+						 type : 'post',
+						 traditional : true,
+						 data : {
+							 idxArr : idxArr,
+							 positionArr : positionArr,	
+							 rightArr : rightArr,
+						  },
+						  success : function(jdata) {
+							  if(jdata = 1) {
+								  alert("수정 완료");
+								  location.replace("")
+							  } else {
+								  alert("수정 오류");
+							  }
+						  }
+							  
+						  });
+					 }
+					 }
+				 
+			 });
+	
+		});  //$(document).ready
 	
 	</script>
 </html>
