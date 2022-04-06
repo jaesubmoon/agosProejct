@@ -16,7 +16,6 @@ public class UserVO {
 	private Date usr_birth;
 	private String usr_phone;
 	private String usr_address;
-	private String usr_phone2;
 
 	public String getUsr_idx() {
 		return usr_idx;
@@ -96,19 +95,13 @@ public class UserVO {
 	public void setUsr_address(String usr_address) {
 		this.usr_address = usr_address;
 	}
-	public String getUsr_phone2() {
-		return usr_phone2;
-	}
-	public void setUsr_phone2(String usr_phone2) {
-		this.usr_phone2 = usr_phone2;
-	}
+	
 	@Override
 	public String toString() {
 		return "UserVO [usr_idx=" + usr_idx + ", usr_id=" + usr_id + ", usr_pw=" + usr_pw + ", usr_nm=" + usr_nm
 				+ ", usr_gender=" + usr_gender + ", usr_email=" + usr_email + ", usr_crea_date=" + usr_crea_date
 				+ ", usr_position=" + usr_position + ", usr_right=" + usr_right + ", usr_appr=" + usr_appr
-				+ ", usr_birth=" + usr_birth + ", usr_phone=" + usr_phone + ", usr_address=" + usr_address
-				+ ", usr_phone2=" + usr_phone2 + "]";
+				+ ", usr_birth=" + usr_birth + ", usr_phone=" + usr_phone + ", usr_address=" + usr_address + "]";
 	}
 	
 }

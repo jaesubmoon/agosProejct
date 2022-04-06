@@ -2,9 +2,9 @@ package com.agos.agw.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,6 +43,8 @@ public class UserController {
 		
 		System.out.println("total : "+total);
 		
+		model.addAttribute("total", total);											// 총 사원 수 출력을 위함
+		
 		model.addAttribute("paging", vo);
 		model.addAttribute("userList", service.listUserPaging(vo));			// mapper에서 listUserPaging
 //		ArrayList<UserVO> userList = service.listAllUser();
@@ -62,9 +64,9 @@ public class UserController {
 		
 		System.out.println("---------------------------------------");
 		
-		/*
-		 * if(searchType == null) searchType = "";
-		 */
+		
+		if(searchType == null)
+			searchType = "";
 		if(searchKeyword == null)
 			searchKeyword = "";
 		
@@ -77,38 +79,41 @@ public class UserController {
 			  cntPerPage = "20"; }
 		 
 		 HashMap<String,Object> param = new HashMap<String,Object>();
-		 //param.put("searchType", searchType);
+		 param.put("searchType", searchType);
 		 param.put("searchKeyword", searchKeyword);
+		 
+		 //System.out.println(param.get("searchType"));
 		
 		 ArrayList<UserVO> userList = service.userSearch(param);
 		 
-		 System.out.println(userList);			
+		 //System.out.println(userList);			
 		 
 		 int total = userList.size();
 		 System.out.println(total);			// 177
 		 
 		 PagingVO paging = new PagingVO(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
 		 
-		 //paging.setSearchType((String)param.get("searchType"));
+		 paging.setSearchType((String)param.get("searchType"));
 		 paging.setSearchKeyword((String)param.get("searchKeyword"));
 		 
-		 System.out.println(paging.getSearchKeyword());		// test
+		 //System.out.println(paging.getSearchKeyword());		// test
 		 
+		 //System.out.println(searchType);
 		 userList = service.userSearchPaging(paging);
 		 
 		 total = userList.size();
-		 System.out.println(total);		// 20
+		 //System.out.println(total);	
 		 
-		 System.out.println(userList);		
+		 //System.out.println(userList);		
 		 
-		 System.out.println(paging);
+		 //System.out.println(paging);
 		 
-		 System.out.println((String)param.get("searchKeyword"));	
+		 //System.out.println((String)param.get("searchKeyword"));	
 		 
 		 model.addAttribute("paging", paging);
 		 model.addAttribute("userList", service.userSearchPaging(paging));
 			
-		 //model.addAttribute("searchType", (String)param.get("searchType"));
+		 model.addAttribute("searchType", (String)param.get("searchType"));
 		 model.addAttribute("searchKeyword", (String)param.get("searchKeyword"));
 		 
 		 

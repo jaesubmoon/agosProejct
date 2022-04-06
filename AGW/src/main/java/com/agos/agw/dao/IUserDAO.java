@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.agos.agw.model.ExcelVO;
 import com.agos.agw.model.PagingVO;
 import com.agos.agw.model.UserVO;
 
@@ -37,5 +38,8 @@ public interface IUserDAO {
 	ArrayList<UserVO> userSearch(HashMap<String, Object> map);	// 사용자 검색
 	
 	public ArrayList<UserVO> userSearchPaging(PagingVO pagingvo); 	// 검색 후 페이징 처리
+	
+	//엑셀 리스트
+	ArrayList<ExcelVO> excelList();
 	
 }

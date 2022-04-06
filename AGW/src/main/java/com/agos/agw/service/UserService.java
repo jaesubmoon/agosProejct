@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.agos.agw.dao.IUserDAO;
+import com.agos.agw.model.ExcelVO;
 import com.agos.agw.model.PagingVO;
 import com.agos.agw.model.UserVO;
 
@@ -93,6 +94,12 @@ public class UserService implements IUserService {
 	public ArrayList<UserVO> userSearchPaging(PagingVO pagingvo) {
 		
 		return dao.userSearchPaging(pagingvo);
+	}
+	
+	@Override
+	public ArrayList<ExcelVO> excelList() {
+		
+		return dao.excelList();
 	}
 
 }

@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+     
+%>
 
 <!DOCTYPE html>
 <html>
@@ -16,8 +19,16 @@
 				white-space: nowrap;
 			}
 			
+			h4 {
+			    display: inline-block;
+			}
+			
 			a {
 				text-decoration : none;
+			}
+			
+			label {
+			    padding-right: 40px;
 			}
 			
 			#title {
@@ -29,8 +40,14 @@
 				
 			}
 			
+			#excelBtn {
+				margin-left: 720px;
+			}
+			
 			div#linkSearchBox {
 			    display: flex;
+			    margin-bottom: -10px;
+			    margin-top: -10px;
 			}
 			
 			#userListForm {
@@ -39,11 +56,11 @@
 			}
 			
 			#searchPlace{
-				margin-left: 1070px;
+			    margin-left: 25px;
+			    margin-top: 20px;
 			}
 			
 			#tableWholeSpace {
-			    height: 700px;
 			    margin-top: 10px;
 			    position: static;
 			}
@@ -181,7 +198,7 @@
 	</head>
 	<body>
 		<div id="title">
-			<h3>사원 정보 관리 페이지</h3>
+			<h3>사원 승인 관리 페이지</h3>
 			<br>
 			<hr>
 			<br>
@@ -190,20 +207,29 @@
 			<div id="userListForm">
 				<div id="linkSearchBox">
 					<div>
-						<button>사원관리</button>
-						<button id="userRequestList">사원신청</button>
+						<button style="color: white; background-color: dimgrey;">사원목록</button>
+						<button id="userRequestList">신청목록</button>
+						<h4>&nbsp;&nbsp;총 사원수 : ${total }</h4>
+						<button id="excelBtn" onclick="location.href='<c:url value="/excel" />' ">엑셀 파일 생성</button>
 					</div>
 					<div id="searchPlace">
 						<form  name="searchForm" id="searchForm">	<!-- action에 공백으로 주면 현재 페이지 주소까지 넣은것과 같다. -->
+						  <select name="searchType" id="searchType">
+						      <option value="search_id">ID</option>
+						      <option value="search_name">이름</option>
+						      <option value="search_id_name">ID + 이름</option>
+						  </select>
 						  <input type="hidden" name="nowPage" value="1">
-						  <input type="text" name="searchKeyword" id="searchKeyword" placeholder="ID 또는 이름을 입력해주세요." >
+						  <input type="text" name="searchKeyword" id="searchKeyword" placeholder="검색 키워드를 입력해주세요." >
 						  <input type="submit" value="검색">
 					  	</form>	
 					</div>
 				</div>
 					<div id="tableWholeSpace">
 						<div class="tableSpace">
-							<span class="tableCol"><input type="checkbox" id="allCheck" name="allCheck" ></span>
+							<label class="large-label" for="allCheck">
+								<span class="tableCol"><input type="checkbox" id="allCheck" name="allCheck" ></span>
+							</label>
 							<span class="tableCol">이름</span>
 							<span class="tableCol">직급</span>
 							<span class="tableCol">권한</span>
@@ -212,9 +238,11 @@
 							<span class="tableCol">E-mail</span>
 						</div>
 						<div id="tableWholeContent">
-							<c:forEach items="${userList }" var="user">
+							<c:forEach items="${userList }" var="user" varStatus="status">
 								<div class="tableContentSpace">
-									<span class="tableCol"><input type="checkbox" name="rowCheck" value="${user.usr_idx }"></span>
+									<label for="rowCheck">
+										<span class="tableCol"><input type="checkbox" name="rowCheck" value="${user.usr_idx }"></span>
+									</label>
 									<span class="tableCol">${user.usr_nm}</span>
 									<span class="tableCol">
 										<label for="usr_position">
@@ -228,7 +256,12 @@
 									<span class="tableCol">
 										<label for="usr_right">
 											<select id="usr_right" name="usr_right">
-												<option value="${user.usr_right}">${user.usr_right}</option>
+												<c:if test="${user.usr_right eq '관리자'}" >
+													<option value="0">${user.usr_right}</option>
+												</c:if>
+												<c:if test="${user.usr_right eq '일반'}" >
+													<option value="1">${user.usr_right}</option>
+												</c:if>
 												<option value="0">관리자</option>
 												<option value="1">일반</option>
 											</select>
@@ -237,6 +270,7 @@
 									<span class="tableCol">${user.usr_gender}</span>
 									<span class="tableCol">${user.usr_id}</span>
 									<span class="tableCol">${user.usr_email}</span>
+									<input type="hidden" name="total" value="${status.count}">
 								</div>
 							</c:forEach>
 						</div>
@@ -272,7 +306,7 @@
 	</body>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+		
 			var urlRequest = "<c:url value='/userRequestList' />"
 		
 			// 사원 신청 목록 페이지 불러오기
@@ -393,7 +427,6 @@
 			
 			 // 수정 버튼 클릭시_다중선택 업데이트 (선택 삭제 기능과 로직이 같다)
 			 $('#updateBtn').click(function() {
-				 event.preventDefault();
 				
 				 var urlUpdate = "<c:url value='/userSelectUpdate' />"
 				 
@@ -431,9 +464,9 @@
 					 
 					 if(chkUpdate) {
 					 
-					/*  alert(idxArr);
+					 /*  alert(idxArr);
 					 alert(positionArr);
-					 alert(rightArr); */ // 넘겨주는 값 확인
+					 alert(rightArr);  // 넘겨주는 값 확인 */
 					 
 					 $.ajax({
 						 url : urlUpdate,

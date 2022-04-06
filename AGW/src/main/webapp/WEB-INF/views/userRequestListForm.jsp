@@ -21,6 +21,11 @@
 				width: 100%;
 			}
 			
+			div#linkBtn {
+			    margin-top: 10px;
+			    margin-bottom: 20px;
+			}
+			
 			#userRequestForm {
 				margin: 0 auto;
 				width: 1440px;
@@ -32,7 +37,6 @@
 			
 			#tableWholeSpace {
 			    border: 1px solid;
-			    height: 700px;
 			    margin-top: 10px;
 			}
 			
@@ -87,23 +91,19 @@
 			}
 			
 			.RequestTableSpace :nth-child(10n+6) {
-				width: 12%;
+				width: 14%;
 			}
 			
 			.RequestTableSpace :nth-child(10n+7) {
-				width: 10%;
+				width: 20%;
 			}
 			
 			.RequestTableSpace :nth-child(10n+8) {
-				width: 13%;
-			}
-			
-			.RequestTableSpace :nth-child(10n+9) {
-				width: 6%;
+				width: 8%;
 				text-align: center;
 			}
 			
-			.RequestTableSpace :nth-child(10n+10) {
+			.RequestTableSpace :nth-child(10n+9) {
 				width: 6%;
 				text-align: center;
 			}
@@ -133,28 +133,22 @@
 			}
 			
 			.RequestTableContentSpace :nth-child(10n+6) {
-				width: 12%;
+				width: 14%;
 				background: transparent !important;
 			}
 			
 			.RequestTableContentSpace :nth-child(10n+7) {
-				width: 10%;
+				width: 22%;
 			}
 			
 			.RequestTableContentSpace :nth-child(10n+8) {
-				width: 13%;
+				width: 6%;
 				background: transparent !important;
 			}
 			
 			.RequestTableContentSpace :nth-child(10n+9) {
 				width: 6%;
 				text-align: center;
-			}
-			
-			.RequestTableContentSpace :nth-child(10n+10) {
-				width: 6%;
-				text-align: center;
-				background: transparent !important;
 			}
 			
 			#userCheck {
@@ -167,7 +161,7 @@
 			}
 			
 			div#apprReject {
-				 margin-left: 1145px;
+				 margin-left: 1313px;
 			}
 			
 			#apprBtn {
@@ -185,9 +179,9 @@
 	<body>
 		<div id="container">
 			<div id="userRequestForm">
-				<div>
-						<button onClick="location.href='/agw/UserAllList'">사원관리</button>
-						<button id="userRequestList">사원신청</button>
+				<div id="linkBtn">
+						<button onClick="location.href='/agw/UserAllList'">사원목록</button>
+						<button id="userRequestList" style="color: white; background-color: dimgrey;">신청목록</button>
 				</div>
 				<div id="tableWholeSpace">
 					<div class="RequestTableSpace">
@@ -197,7 +191,6 @@
 						<span class="tableCol">성별</span>
 						<span class="tableCol">연락처</span>
 						<span class="tableCol">E-mail</span>
-						<span class="tableCol">비상 연락처</span>
 						<span class="tableCol">주소</span>
 						<span class="tableCol">직급</span>
 						<span class="tableCol">권한</span>
@@ -211,7 +204,6 @@
 								<span class="tableCol">${user.usr_gender}</span>
 								<span class="tableCol">${user.usr_phone}</span>
 								<span class="tableCol">${user.usr_email}</span>
-								<span class="tableCol">${user.usr_phone2}</span>
 								<span class="tableCol">${user.usr_address}</span>
 								<span class="tableCol">
 									<label for="usr_position">
@@ -233,30 +225,13 @@
 						</c:forEach>
 					</div>
 				</div>
-				<div id="pageApprReject">
-					<!-- 페이지 넘기기 -->
-					<div class="pagelist">
-						<c:if test="${paging.startPage != 1 }">
-							<a href="<c:url value='/userRequestList/?nowPage=${paging.startPage - 1 }&cntPerPage=${paging.cntPerPage}'/>">‹</a>
-						</c:if>
-						<c:forEach begin="${paging.startPage }" end="${paging.endPage }" var="p">
-							<c:choose>
-								<c:when test="${p == paging.nowPage }">
-									<b>${p }&emsp;</b>
-								</c:when>
-								<c:when test="${p != paging.nowPage }">
-									<a href="<c:url value='/userRequestList/?nowPage=${p }&cntPerPage=${paging.cntPerPage}'/>">${p }&emsp;</a>
-								</c:when>
-							</c:choose>
-						</c:forEach>
-						<c:if test="${paging.endPage != paging.lastPage }">
-							<a href="<c:url value='/userRequestList/?nowPage=${paging.endPage + 1 }&cntPerPage=${paging.cntPerPage}'/>">›</a>
-						</c:if>
-					</div>
-					<div id="apprReject">
-						<button id="apprBtn">승인</button>
-						<button id="rejectBtn">거부</button>
-					</div>
+				<div class="pagination-wrapper clearfix">
+                	<ul class="pagination float--right" id="pages">
+                 	</ul>
+                </div>
+				<div id="apprReject">
+					<button id="apprBtn">승인</button>
+					<button id="rejectBtn">거부</button>
 				</div>
 			</div>
 		
@@ -265,6 +240,50 @@
 	</body>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			
+			// 페이징
+			let totalData = document.getElementsByName("total").length;			// forEach 수  : 반복한 행의 수
+			const dataPerPage = 10;															// 한 페이지에 보여줄 목록 수
+			const pageCount = 5;																// 하단에 보여줄 페이지 버튼 수
+			let currentPage = 1;
+			
+			console.log("currentPage : " + currentPage);
+	        console.log("totalData : " + totalData);
+			
+			function paging(totalData, currentPage) {
+				const totalPage = Math.ceil(totalData / dataPerPage);			// 총 페이지 수
+				const pageGroup = Math.ceil(currentPage / pageCount);			// 페이지 그룹 ( 1~5 : 1그룹, 6~10 : 2그룹 개념)
+				
+				let last = pageGroup * pageCount;		// 화면에 보여질 마지막 페이지 번호
+				if(last > totalPage) last = totalPage;	// 마지막 번호가 총 페이지 수보다 큰 경우 방지
+				let first = last - (pageCount - 1);		// 화면에 보여질 첫번째 페이지 번호
+				const next = last + 1;
+				const prev = first - 1;
+				
+				if(totalPage < 1) first = last;
+				
+				const pages = document.getElementsById("pages");
+				pages.empty();
+				
+				if (first > 5) {
+		            pages.append("<li class=\"pagination-item\">" +
+		                "<a onclick=\"GetTarget(" + (prev) + ");\" style='margin-left: 2px'>prev</a></li>");
+		        }
+		        for (let j = first; j <= last; j++) {
+		            if (currentPage === (j)) {
+		                pages.append("<li class=\"pagination-item\">" +
+		                    "<a class='active' onclick=\"GetTarget(" + (j) + ");\" style='margin-left: 2px'>" + (j) + "</a></li>");
+		            } else if (j > 0 ) {
+		                pages.append("<li class=\"pagination-item\">" +
+		                    "<a onclick=\"GetTarget(" + (j) + ");\" style='margin-left: 2px'>" + (j) + "</a></li>");
+		            }
+		        }
+		        if (next > 5 && next < totalPage) {
+		            pages.append("<li class=\"pagination-item\">" +
+		                "<a onclick=\"GetTarget(" + (next) + ");\" style='margin-left: 2px'>next</a></li>");
+		        }
+		    }
+			
 			
 			// 체크박스 설정
 			var chkObj = document.getElementsByName("rowCheck");
@@ -366,7 +385,7 @@
 				 if(idxArr.length == 0) {			// 체크된게 없어서 배열에 아무것도 들어가지 않았을 때
 					alert("선택된 항목이 없습니다.");
 				 } else {
-					 var chkUpdate = confirm("정말로 수정하시겠습니까?");
+					 var chkUpdate = confirm("정말로 승인하시겠습니까?");
 					 
 					 if(chkUpdate) {
 					 

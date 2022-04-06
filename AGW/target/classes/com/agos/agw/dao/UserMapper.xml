@@ -18,7 +18,15 @@
   		<result property="usr_birth" column="usr_birth" />
   		<result property="usr_phone" column="usr_phone" />
   		<result property="usr_address" column="usr_address" />
-  		<result property="usr_phone2" column="usr_phone2" />
+  	</resultMap>
+  	
+	<resultMap type="com.agos.agw.model.ExcelVO" id="ExcelResult">
+		<result property="usr_id" column="usr_id" />
+		<result property="usr_nm" column="usr_nm" />
+		<result property="usr_email" column="usr_email" />
+		<result property="usr_position" column="usr_position" />
+		<result property="usr_phone" column="usr_phone" />
+		<result property="usr_address" column="usr_address" />
   	</resultMap>
   	
   	<!-- 전체 사용자 조회 -->
@@ -58,10 +66,21 @@
   			usr_idx, usr_id, usr_pw, usr_nm, usr_gender, usr_email, usr_crea_date, usr_position,
 			case usr_right when 0 then "관리자" else (case usr_right when 1 then "일반" end) end as usr_right,
         	usr_appr
-        FROM user_regist
-        WHERE usr_id LIKE CONCAT('%', #{searchKeyword}, '%')
-        OR usr_nm LIKE CONCAT('%', #{searchKeyword}, '%')
-        AND usr_appr=1
+        FROM `user_regist`
+        WHERE 
+        <choose>
+        	<when test="searchType.equals('search_id')">
+        		usr_id LIKE CONCAT('%', #{searchKeyword}, '%')
+        	</when>
+        	<when test="searchType.equals('search_name')">
+        		usr_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+        	</when>
+        	<when test="searchType.equals('search_id_name')">
+        		usr_id LIKE CONCAT('%', #{searchKeyword}, '%')
+        		OR usr_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+        	</when>
+        </choose>
+       	AND usr_appr=1
   	</select>
   	
   	<!-- 검색 후 페이징 유지 -->
@@ -73,9 +92,20 @@
 		FROM (
 			SELECT @ROWNUM:=@ROWNUM +1 AS RN, Q.* 
 				FROM (
-						SELECT * FROM user_regist Q
-							WHERE usr_id LIKE CONCAT('%', #{searchKeyword}, '%')
-        					OR usr_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+						SELECT * FROM `user_regist` Q
+							WHERE
+							<choose>
+					        	<when test="searchType.equals('search_id')">
+					        		usr_id LIKE CONCAT('%', #{searchKeyword}, '%')
+					        	</when>
+					        	<when test="searchType.equals('search_name')">
+					        		usr_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+					        	</when>
+					        	<when test="searchType.equals('search_id_name')">
+					        		usr_id LIKE CONCAT('%', #{searchKeyword}, '%')
+					        		OR usr_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+					        	</when>
+					        </choose>
         					AND usr_appr=1
 						)Q, (SELECT @ROWNUM:=0)A
 						)B
@@ -99,7 +129,7 @@
   		SELECT 
   			usr_idx, usr_id, usr_pw, usr_nm, usr_gender, usr_email, usr_crea_date, usr_position,
 			case usr_right when 0 then "관리자" else (case usr_right when 1 then "일반" end) end as usr_right,
-        	usr_appr, usr_birth, usr_phone, usr_address, usr_phone2
+        	usr_appr, usr_birth, usr_phone, usr_address
         FROM user_regist WHERE usr_appr= 0
   	</select>
   	
@@ -108,15 +138,9 @@
   		SELECT 
   			usr_idx, usr_id, usr_pw, usr_nm, usr_gender, usr_email, usr_crea_date, usr_position,
 			case usr_right when 0 then "관리자" else (case usr_right when 1 then "일반" end) end as usr_right,
-        	usr_appr, usr_birth, usr_phone, usr_address, usr_phone2
-  		FROM (
-				SELECT @ROWNUM:=@ROWNUM +1 AS RN, Q.* 
-					FROM (
-							SELECT * FROM user_regist Q
-							)Q, (SELECT @ROWNUM:=0)A
-							)B
-					WHERE RN BETWEEN #{start} AND #{end}
-					AND usr_appr = 0
+        	usr_appr, usr_birth, usr_phone, usr_address
+  		FROM user_regist
+  		WHERE usr_appr = 0
   	</select>
   	
   	<!-- 사용자 승인 : 승인 여부 값을 0에서 1로 업데이트 + 데이터 업데이트 -->
@@ -124,5 +148,12 @@
   		UPDATE user_regist SET usr_position =#{usr_position}, usr_right =#{usr_right}, usr_appr = 1
   			WHERE usr_idx = #{usr_idx}
   	</update>
+  	
+  	<!-- 엑셀 리스트 -->
+  	<select id="excelList" resultMap="ExcelResult">
+  		SELECT
+  			usr_id, usr_nm, usr_position, usr_email, usr_phone, usr_address
+  		FROM user_regist
+  	</select>
   
   </mapper>

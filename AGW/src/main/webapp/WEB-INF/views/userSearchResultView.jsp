@@ -5,9 +5,9 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>사원 정보 관리 페이지</title>
+		<title>사원 승인 관리 페이지</title>
 		<style type="text/css">
-		
+			
 		</style>
 	</head>
 	<body>
@@ -21,7 +21,7 @@
 				<span class="tableCol">ID</span>
 				<span class="tableCol">E-mail</span>
 			</div>
-				<form id="updateForm" method="post" onsubmit="updateSubmit()">
+				<div id="tableWholeContent">
 					<c:forEach items="${userList }" var="user">
 						<div class="tableContentSpace">
 							<span class="tableCol"><input type="checkbox" name="rowCheck" value="${user.usr_idx }"></span>
@@ -49,7 +49,7 @@
 							<span class="tableCol">${user.usr_email}</span>
 						</div>
 					</c:forEach>
-					
+				</div>
 				<div id="pageUpdateDelete">
 					<!-- 페이지 넘기기 -->
 					<div class="pagelist">
@@ -75,7 +75,6 @@
 						<button id="deleteBtn">삭제</button>
 					</div>
 				</div>
-			</form>
 		</div>
 		<%-- ${userList } --%>
 	</body>
@@ -83,7 +82,7 @@
 		function callAjax(nowPage, cntPerPage) {
 			
 			//var urlSearch = "<c:url value='/userSearch' />"
-			//var searchType = $('#searchType').val();
+			var searchType = $('#searchType').val();
 			var searchKeyword = $('#searchKeyword').val();		
 			$.ajax({
 				type:"post",
@@ -92,7 +91,7 @@
 				//data:formData,
 				async: false,
 				data:{
-					//'searchType':searchType,
+					'searchType':searchType,
 					'searchKeyword':searchKeyword,
 					'nowPage':nowPage,
 					'cntPerPage':cntPerPage
