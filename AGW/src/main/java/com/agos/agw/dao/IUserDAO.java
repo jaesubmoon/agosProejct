@@ -40,6 +40,9 @@ public interface IUserDAO {
 	public ArrayList<UserVO> userSearchPaging(PagingVO pagingvo); 	// 검색 후 페이징 처리
 	
 	//엑셀 리스트
-	ArrayList<ExcelVO> excelList();
+	ArrayList<ExcelVO> excelList(HashMap<String, Object> map);
+	
+	//사용자 상세 정보
+	ArrayList<UserVO> userDetail(String usr_idx);
 	
 }

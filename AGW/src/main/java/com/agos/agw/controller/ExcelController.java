@@ -1,6 +1,7 @@
 package com.agos.agw.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +12,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.agos.agw.model.ExcelVO;
@@ -21,9 +23,19 @@ public class ExcelController {
 	
 	@Autowired
 	UserService service;
-	
-	@RequestMapping("/excel") 
-	public void downloadExcel (HttpServletResponse response) throws IOException {
+	@RequestMapping(value= {"/excel/{searchType}/{searchKeyword}", "/excel/{searchType}"}) 
+	public void downloadExcel (HttpServletResponse response
+										,@PathVariable(required = false) String searchType
+										,@PathVariable(required = false) String searchKeyword) throws IOException {
+		
+	  if(searchType == null)
+		searchType = "";
+	  if(searchKeyword == null)
+		searchKeyword = "";
+	  
+	  HashMap<String,Object> param = new HashMap<String,Object>();
+	  param.put("searchType", searchType);
+	  param.put("searchKeyword", searchKeyword);
 		
 	  Workbook workbook = new HSSFWorkbook();				// Workbook 생성 ( 엑셀 파일)
 	  
@@ -40,11 +52,11 @@ public class ExcelController {
 	  headerRow.createCell(4).setCellValue("이메일");
 	  headerRow.createCell(5).setCellValue("주소");
 	  
-	  List<ExcelVO> list = service.excelList();
+	  List<ExcelVO> list = service.excelList(param);
 		
-		/*
-		 * for (ExcelVO excelVO : list) { System.out.println(excelVO); }
-		 */
+		
+	  for (ExcelVO excelVO : list) { System.out.println(excelVO); }
+		 
 	  
 	  for (ExcelVO excelVO : list) {								// 반복문을 통해서 DB 값을 행에 입력
 		  Row row = sheet.createRow(rowNo++);

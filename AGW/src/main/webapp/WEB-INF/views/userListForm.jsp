@@ -31,6 +31,10 @@
 			    padding-right: 40px;
 			}
 			
+			button {
+			    border-radius: 5px;
+			}
+			
 			#title {
 				text-align: center;
 			}
@@ -58,6 +62,10 @@
 			#searchPlace{
 			    margin-left: 25px;
 			    margin-top: 20px;
+			}
+			
+			input[type="submit"] {
+			    border-radius: 5px;
 			}
 			
 			#tableWholeSpace {
@@ -198,7 +206,7 @@
 	</head>
 	<body>
 		<div id="title">
-			<h3>사원 승인 관리 페이지</h3>
+			<h3>사원 관리 페이지</h3>
 			<br>
 			<hr>
 			<br>
@@ -210,7 +218,7 @@
 						<button style="color: white; background-color: dimgrey;">사원목록</button>
 						<button id="userRequestList">신청목록</button>
 						<h4>&nbsp;&nbsp;총 사원수 : ${total }</h4>
-						<button id="excelBtn" onclick="location.href='<c:url value="/excel" />' ">엑셀 파일 생성</button>
+						<button id="excelBtn">엑셀 파일 생성</button>
 					</div>
 					<div id="searchPlace">
 						<form  name="searchForm" id="searchForm">	<!-- action에 공백으로 주면 현재 페이지 주소까지 넣은것과 같다. -->
@@ -303,12 +311,14 @@
 				<%-- ${userList } --%>
 			</div>
 		</div>
+		
 	</body>
 	<script type="text/javascript">
+	
 		$(document).ready(function() {
-		
-			var urlRequest = "<c:url value='/userRequestList' />"
-		
+			
+			const urlRequest = "<c:url value='/userRequestList' />"
+			
 			// 사원 신청 목록 페이지 불러오기
 			$('#userRequestList').click(function() {
 				event.preventDefault();  // 새로고침 막기
@@ -328,16 +338,25 @@
 				})
 			});
 			
+			// 엑셀 파일 생성
+			$('#excelBtn').click(function() {
+				let searchType = $('#searchType').val();
+				let searchKeyword = $('#searchKeyword').val();
+				
+				location.href = '/agw/excel/'+searchType+'/'+searchKeyword;
+				
+			});
+			
 			// 검색
 			$('#searchForm').on('submit', function(){
 				event.preventDefault();
 				
-				var urlSearch = "<c:url value='/userSearch' />"
+				const urlSearch = "<c:url value='/userSearch' />"
 				
-				var searchType = $('#searchType').val();
-				var searchKeyword = $('#searchKeyword').val();
-				var nowPage = 1;
-				var cntPerPage = 20;  		
+				let searchType = $('#searchType').val();
+				let searchKeyword = $('#searchKeyword').val();
+				let nowPage = 1;
+				const cntPerPage = 20;  		
 				
 				//alert(searchType);
 				 $.ajax({
@@ -386,7 +405,7 @@
 			$('#deleteBtn').click(function() {
 				event.preventDefault();
 				
-				var urlDelete = "<c:url value='/userSelectDelete' />"
+				var urlDelete = "<c:url value='/userSelectDelete' />";
 				
 				var chkArr = new Array();							// 체크된 행 배열을 넣을 새로운 배열
 				var list = $('input[name="rowCheck"]');			// name이 rowCheck인 모든 input값을 넣는다
@@ -428,10 +447,10 @@
 			 // 수정 버튼 클릭시_다중선택 업데이트 (선택 삭제 기능과 로직이 같다)
 			 $('#updateBtn').click(function() {
 				
-				 var urlUpdate = "<c:url value='/userSelectUpdate' />"
+				 const urlUpdate = "<c:url value='/userSelectUpdate' />"
 				 
-				 var idxArr = new Array();
-				 var idxList = $('input[name="rowCheck"]');
+				 let idxArr = new Array();
+				 let idxList = $('input[name="rowCheck"]');
 				 
 				 for(var i=0 ; i < idxList.length ; i++ ) {
 					 if(idxList[i].checked) {
@@ -439,8 +458,8 @@
 					 }
 				 }
 				 
-				 var positionArr = new Array();
-				 var positionList = $('select[name="usr_position"]');
+				 let positionArr = new Array();
+				 let positionList = $('select[name="usr_position"]');
 				 
 				 for(var i=0 ; i < positionList.length ; i++ ) {
 					if(idxList[i].checked) {
@@ -448,8 +467,8 @@
 					}
 				 }
 				 
-				 var rightArr = new Array();
-				 var rightList = $('select[name="usr_right"]');
+				 let rightArr = new Array();
+				 let rightList = $('select[name="usr_right"]');
 				 
 				 for(var i=0 ; i < rightList.length ; i++ ) {
 					if(idxList[i].checked) {
@@ -460,7 +479,7 @@
 				 if(idxArr.length == 0) {			// 체크된게 없어서 배열에 아무것도 들어가지 않았을 때
 					alert("선택된 항목이 없습니다.");
 				 } else {
-					 var chkUpdate = confirm("정말로 수정하시겠습니까?");
+					 let chkUpdate = confirm("정말로 수정하시겠습니까?");
 					 
 					 if(chkUpdate) {
 					 

@@ -97,9 +97,15 @@ public class UserService implements IUserService {
 	}
 	
 	@Override
-	public ArrayList<ExcelVO> excelList() {
+	public ArrayList<ExcelVO> excelList(HashMap<String, Object> map) {
 		
-		return dao.excelList();
+		return dao.excelList(map);
+	}
+	
+	@Override
+	public ArrayList<UserVO> userDetail(String usr_idx) {
+		
+		return dao.userDetail(usr_idx);
 	}
 
 }

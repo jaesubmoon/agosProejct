@@ -150,10 +150,28 @@
   	</update>
   	
   	<!-- 엑셀 리스트 -->
-  	<select id="excelList" resultMap="ExcelResult">
+  	<select id="excelList" parameterType="hashMap" resultMap="ExcelResult">
   		SELECT
   			usr_id, usr_nm, usr_position, usr_email, usr_phone, usr_address
   		FROM user_regist
+  		WHERE
+		<choose>
+        	<when test="searchType.equals('search_id')">
+        		usr_id LIKE CONCAT('%', #{searchKeyword}, '%')
+        	</when>
+        	<when test="searchType.equals('search_name')">
+        		usr_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+        	</when>
+        	<when test="searchType.equals('search_id_name')">
+        		usr_id LIKE CONCAT('%', #{searchKeyword}, '%')
+        		OR usr_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+        	</when>
+        </choose>
+         AND usr_appr=1
   	</select>
-  
+  	
+  	<!-- 사용자 상세 정보 for 모달 -->
+  	<select id="userDetail" parameterType="string" resultMap="userResult">
+  		SELECT * FROM user_regist WHERE usr_id = #{usr_id}
+  	</select>
   </mapper>

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -49,6 +49,8 @@ public class UserController {
 		model.addAttribute("userList", service.listUserPaging(vo));			// mapper에서 listUserPaging
 //		ArrayList<UserVO> userList = service.listAllUser();
 //		model.addAttribute("userList", userList);
+		
+		//System.out.println(service.listUserPaging(vo));
 		
 		return "userListForm";
 	}
@@ -160,6 +162,8 @@ public class UserController {
 	// 사용자 선택 삭제
 	@RequestMapping(value="/userSelectDelete")
 	public String userDelete(HttpServletRequest request) throws Exception {		//HttpServletRequest를 통해 ajax에서 보낸 data를 받아낸다.
+		
+		
 		String[] ajaxMsg = request.getParameterValues("chkArr");						//문자 배열에 받아온 data를 뿌린다
 		int size = ajaxMsg.length;																	//배열 크기만큼 삭제 반복
 		for(int i = 0 ; i < size ; i++) {
@@ -224,5 +228,16 @@ public class UserController {
 	
 		  return "redirect:/UserAllList";
 	  }
-	 
+	  
+	  // 상세 정보 모달
+	  @RequestMapping(value="/userDetail")
+	  public String userDetail (Model model
+			  							,@RequestParam(value="nowPage", required=false) String usr_idx) {
+		  
+		  service.userDetail(usr_idx);
+		  
+		  return "detailView";
+	  }
+	  
+
 }
