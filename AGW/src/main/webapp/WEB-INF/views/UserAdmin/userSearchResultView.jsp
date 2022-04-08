@@ -25,7 +25,7 @@
 					<c:forEach items="${userList }" var="user">
 						<div class="tableContentSpace">
 							<span class="tableCol"><input type="checkbox" name="rowCheck" value="${user.usr_idx }"></span>
-							<span class="tableCol">${user.usr_nm}</span>
+							<span class="tableCol"><a href="javascript:userDetail(${user.usr_idx});">${user.usr_nm}</a></span>
 							<span class="tableCol">
 								<label for="usr_position">
 									<select id=usr_position name="usr_position">

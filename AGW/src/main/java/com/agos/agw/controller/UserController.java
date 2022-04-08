@@ -50,9 +50,7 @@ public class UserController {
 //		ArrayList<UserVO> userList = service.listAllUser();
 //		model.addAttribute("userList", userList);
 		
-		//System.out.println(service.listUserPaging(vo));
-		
-		return "userListForm";
+		return "/UserAdmin/userListForm";
 	}
 	
 	// 검색 기능
@@ -119,7 +117,7 @@ public class UserController {
 		 model.addAttribute("searchKeyword", (String)param.get("searchKeyword"));
 		 
 		 
-		return "userSearchResultView";
+		return "/UserAdmin/userSearchResultView";
 	}
 	
 	// 사용자 신청 페이지 불러오기
@@ -148,7 +146,7 @@ public class UserController {
 		model.addAttribute("userList", service.listRequestPaging(vo));
 //		ArrayList<UserVO> userList = service.listRequestUser();
 //		model.addAttribute("userList", userList);
-		return "userRequestListForm";
+		return "/UserAdmin/userRequestListForm";
 	}
 	
 	
@@ -229,14 +227,14 @@ public class UserController {
 		  return "redirect:/UserAllList";
 	  }
 	  
-	  // 상세 정보 모달
-	  @RequestMapping(value="/userDetail")
+	  // 상세 정보
+	  @RequestMapping(value="/userDetail") 
 	  public String userDetail (Model model
-			  							,@RequestParam(value="nowPage", required=false) String usr_idx) {
+			  							,@RequestParam(value="usr_idx") int usr_idx)  throws Exception { 
 		  
-		  service.userDetail(usr_idx);
+		  model.addAttribute("userList",service.userDetail(usr_idx));
 		  
-		  return "detailView";
+		  return "/UserAdmin/detailView";
 	  }
 	  
 

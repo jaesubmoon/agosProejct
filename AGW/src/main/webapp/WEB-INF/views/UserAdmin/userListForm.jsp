@@ -25,6 +25,7 @@
 			
 			a {
 				text-decoration : none;
+				color : black;
 			}
 			
 			label {
@@ -251,7 +252,7 @@
 									<label for="rowCheck">
 										<span class="tableCol"><input type="checkbox" name="rowCheck" value="${user.usr_idx }"></span>
 									</label>
-									<span class="tableCol">${user.usr_nm}</span>
+									<span class="tableCol"><a href="javascript:void(0);" onClick="return userDetail(${user.usr_idx});">${user.usr_nm}</a></span>
 									<span class="tableCol">
 										<label for="usr_position">
 											<select id=usr_position name="usr_position">
@@ -314,6 +315,26 @@
 		
 	</body>
 	<script type="text/javascript">
+	
+	// 사원 상세 정보
+	function userDetail(usr_idx) {
+		
+		const urlDetail = "<c:url value='/userDetail' />" ;
+		
+		$.ajax({
+			type:"post",
+			url : urlDetail,
+			data : {
+				usr_idx : usr_idx
+			},
+			success: function(result) {
+				$("#wrap").html(result);
+			},
+			error:function(data, testStatus) {
+				alert("상세 정보 조회 실패");
+			}
+		})
+	}
 	
 		$(document).ready(function() {
 			

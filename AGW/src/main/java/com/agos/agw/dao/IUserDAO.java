@@ -43,6 +43,6 @@ public interface IUserDAO {
 	ArrayList<ExcelVO> excelList(HashMap<String, Object> map);
 	
 	//사용자 상세 정보
-	ArrayList<UserVO> userDetail(String usr_idx);
+	ArrayList<UserVO> userDetail(int usr_idx);
 	
 }
