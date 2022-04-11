@@ -1,0 +1,171 @@
+@charset "UTF-8";
+
+/* userRequestListForm.css */
+
+a {
+	text-decoration : none;
+}		
+
+#title {
+	text-align: center;
+}
+
+#container {
+	display: flex;
+	width: 100%;
+}
+
+div#linkBtn {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#userRequestForm {
+	margin: 0 auto;
+	width: 1440px;
+}
+
+#searchPlace{
+	float:  right;
+}
+
+#tableWholeSpace {
+    border: 1px solid;
+    margin-top: 10px;
+}
+
+.RequestTableSpace {			
+    border: 2px solid black;
+    background: gainsboro;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+#RequestTableWholeContent :nth-child(2n) {
+	background: #efefef;
+}
+
+.RequestTableContentSpace {			
+    border-bottom: 1px solid black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.tableCol {
+	display: inline-block;
+    padding-right: 15px;
+    padding-left: 15px;
+    width: 10%;
+}
+
+#tableChkBox {
+	width: 5%;
+}
+
+.RequestTableSpace :nth-child(10n+1) {
+	margin: 0%;
+ 			margin-right: -8%;
+}
+
+.RequestTableSpace :nth-child(10n+2) {
+	width: 4%;
+}
+
+.RequestTableSpace :nth-child(10n+3) {
+	width: 7%;
+}
+
+.RequestTableSpace :nth-child(10n+4) {
+	width: 5%;
+	text-align: center;
+}
+
+.RequestTableSpace :nth-child(10n+5) {
+	width: 10%;
+}
+
+.RequestTableSpace :nth-child(10n+6) {
+	width: 14%;
+}
+
+.RequestTableSpace :nth-child(10n+7) {
+	width: 20%;
+}
+
+.RequestTableSpace :nth-child(10n+8) {
+	width: 8%;
+	text-align: center;
+}
+
+.RequestTableSpace :nth-child(10n+9) {
+	width: 6%;
+	text-align: center;
+}
+
+.RequestTableContentSpace :nth-child(10n+1) {
+	margin: 0%;
+ 			margin-right: -8%;
+}
+
+.RequestTableContentSpace :nth-child(10n+2) {
+	width: 4%;
+	background: transparent !important;
+}
+
+.RequestTableContentSpace :nth-child(10n+3) {
+	width: 7%;
+}
+
+.RequestTableContentSpace :nth-child(10n+4) {
+	width: 5%;
+	text-align: center;
+	background: transparent !important;
+}
+
+.RequestTableContentSpace :nth-child(10n+5) {
+	width: 10%;
+}
+
+.RequestTableContentSpace :nth-child(10n+6) {
+	width: 14%;
+	background: transparent !important;
+}
+
+.RequestTableContentSpace :nth-child(10n+7) {
+	width: 22%;
+}
+
+.RequestTableContentSpace :nth-child(10n+8) {
+	width: 6%;
+	background: transparent !important;
+}
+
+.RequestTableContentSpace :nth-child(10n+9) {
+	width: 6%;
+	text-align: center;
+}
+
+#userCheck {
+	width: 13px !important;
+}
+
+div#pageApprReject {
+    margin-top: 15px;
+    display: flex;
+}
+
+div#apprReject {
+	 margin-left: 1313px;
+}
+
+#apprBtn {
+    margin-right: 20px;
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+}
+
+#rejectBtn {
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+}
+

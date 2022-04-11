@@ -8,40 +8,7 @@
 		<meta charset="UTF-8">
 		<title>사용자 상세 정보</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-		<style type="text/css">
-		
-			html {
-			  /* 가로 스크롤 */
-				overflow: auto;
-				white-space: nowrap;
-			}
-			
-			h3 {
-			    margin-top: 20px;
-			    font-size: larger;
-			    font-weight: bold;
-			}
-			
-			h4 {
-			    display: inline-block;
-			}
-			
-			a {
-				text-decoration : none;
-			}
-			
-			label {
-			    padding-right: 40px;
-			}
-			
-			button {
-			    border-radius: 5px;
-			}
-			div#container {
-			    margin: 0 auto;
-			    display: grid;
-			}
-		</style>
+		<link  href="<c:url value='/resources/css/detailView.css' />" rel="stylesheet"  type="text/css" >
 	</head>
 	<body>
 		<div id="container">

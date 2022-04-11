@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+/* detailView.css */
+
+html {
+  /* 가로 스크롤 */
+	overflow: auto;
+	white-space: nowrap;
+}
+
+h3 {
+    margin-top: 20px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+h4 {
+    display: inline-block;
+}
+
+a {
+	text-decoration : none;
+}
+
+label {
+    padding-right: 40px;
+}
+
+button {
+    border-radius: 5px;
+}
+div#container {
+    margin: 0 auto;
+    display: grid;
+}
+
