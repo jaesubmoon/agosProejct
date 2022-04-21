@@ -2,15 +2,18 @@ package com.agos.agw.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.agos.agw.model.PagingVO;
 import com.agos.agw.model.UserVO;
@@ -22,6 +25,9 @@ public class UserController {
 	@Autowired
 	UserService service;
 	
+	@Autowired
+	JavaMailSender javaMailSender;
+
 	// 전체 사용자 조회
 	@RequestMapping("/UserAllList")
 	public String UserAllList(Model model
@@ -237,5 +243,48 @@ public class UserController {
 		  return "/UserAdmin/detailView";
 	  }
 	  
+	  // 회원가입
+	  @RequestMapping(value="/userJoin")
+	  public String userJoin () {
+		  
+		  return "/joinView";
+	  }
+	  
+	  // 이메일 인증
+	  @RequestMapping(value="/checkMail")
+	  @ResponseBody
+	  public String sendMail(String mail) {
+		  
+		  Random random = new Random();		//난수 생성을 위한 랜덤 클래스
+		  String key = "";					// 인증번호
+		  
+		  SimpleMailMessage message = new SimpleMailMessage();
+		  message.setTo(mail);				// 인증 메일을 받을 메일 값
+		  
+		  //입력 키를 위한 코드
+		  for(int i=0 ; i<3 ; i++) {
+			  int index = random.nextInt(25) + 65;	// A~Z까지 랜덤 알파벳 생성
+			  key += (char)index;
+		  }
+		  int numIndex = random.nextInt(9999) + 1000;	// 4자리 랜덤 정수를 생성
+		  key += numIndex;
+		  message.setSubject("AGOS 사원등록을 위한 인증번호 전송");
+		  message.setText("인증 번호 : " + key + "\n사원 등록 신청페이지에 인증번호를 입력해주세요.");
+		  
+		  javaMailSender.send(message);
+		  
+		  System.out.println(key); //인증번호 확인
+		 
+		  return key;
+	  }
+	  
 
 }
+
+
+
+
+
+
+
+

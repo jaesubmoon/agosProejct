@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%
-     
-%>
 
 <!DOCTYPE html>
 <html>
@@ -12,6 +9,13 @@
 		<title>사원 조회 페이지</title>
 		<link  href="<c:url value='/resources/css/userListForm.css' />" rel="stylesheet"  type="text/css" >
 		<script src="<c:url value='/resources/js/jquery-3.6.0.min.js' />"></script>
+		<style type="text/css">
+			button:hover, #submitBtn:hover  {
+				background : #fff2e2;
+				cursor : pointer;
+				transition : 1.2s;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="title">
@@ -38,7 +42,7 @@
 						  </select>
 						  <input type="hidden" name="nowPage" value="1">
 						  <input type="text" name="searchKeyword" id="searchKeyword" placeholder="검색 키워드를 입력해주세요." >
-						  <input type="submit" value="검색">
+						  <input id="submitBtn" type="submit" value="검색">
 					  	</form>	
 					</div>
 				</div>
@@ -57,13 +61,11 @@
 						<div id="tableWholeContent">
 							<c:forEach items="${userList }" var="user" varStatus="status">
 								<div class="tableContentSpace">
-									<label for="rowCheck">
-										<span class="tableCol"><input type="checkbox" name="rowCheck" value="${user.usr_idx }"></span>
-									</label>
+									<span class="tableCol"><input type="checkbox" name="rowCheck" value="${user.usr_idx }"></span>
 									<span class="tableCol"><a href="javascript:void(0);" onClick="return userDetail(${user.usr_idx});">${user.usr_nm}</a></span>
 									<span class="tableCol">
 										<label for="usr_position">
-											<select id=usr_position name="usr_position">
+											<select id=usr_position name="usr_position" onChange="selectChange()">
 												<option value="${user.usr_position}">${user.usr_position}</option>
 												<option value="관리자">관리자</option>
 												<option value="사원">사원</option>
@@ -123,7 +125,6 @@
 		
 	</body>
 	<script type="text/javascript">
-	
 	// 사원 상세 정보
 	function userDetail(usr_idx) {
 		
@@ -212,6 +213,29 @@
 			// 체크박스 설정
 			var chkObj = document.getElementsByName("rowCheck");
 			var chkCnt = chkObj.length;
+			
+			// 직급 변경시 체크
+			$('select[name="usr_position"]').on("change", function() {
+				
+				let test = $(this).parent().parent().parent().index();
+				
+				var chk_listArr = $('input[name="rowCheck"]');
+				
+				chk_listArr[test].checked = true;
+				
+			});
+			
+			// 권한 변경시 체크
+			$('select[name="usr_right"]').on("change", function() {
+				
+				let test = $(this).parent().parent().parent().index();
+				
+				var chk_listArr = $('input[name="rowCheck"]');
+				
+				chk_listArr[test].checked = true;
+				
+			});
+			
 			
 			// 전체 선택
 			$('input[name="allCheck"]').click(function() {

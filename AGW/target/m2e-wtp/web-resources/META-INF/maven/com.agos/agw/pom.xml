@@ -29,6 +29,9 @@
 		
 		<jackson.databind-version>2.11.3</jackson.databind-version>
 		<junit-version>4.7</junit-version>
+		
+		<spring.version>5.2.0.RELEASE</spring.version>
+  		<email.version>1.4.7</email.version>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -185,14 +188,6 @@
 		    <version>1.1.1</version>
 		</dependency>
 		
-		<!-- 롬복  -->
-		<dependency>
-      		<groupId>org.projectlombok</groupId>
-      		<artifactId>lombok</artifactId>
-      		<version>1.18.22</version>
-     	 	<scope>provided</scope>
-		</dependency>
-		
 		<!-- java poi 라이브러리 / 엑셀 -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -205,7 +200,19 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>5.2.2</version>
 		</dependency>
-
+		
+		<dependency>
+		  <groupId>org.springframework</groupId>
+		  <artifactId>spring-context-support</artifactId>
+		  <version>${spring.version}</version>
+		</dependency>
+		 
+		<dependency>
+		  <groupId>com.sun.mail</groupId>
+		  <artifactId>javax.mail</artifactId>
+		  <version>${email.version}</version>
+		</dependency>
+		
 	</dependencies>
     <build>
         <plugins>

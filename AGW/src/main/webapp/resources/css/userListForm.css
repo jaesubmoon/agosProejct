@@ -25,6 +25,11 @@ button {
     border-radius: 5px;
 }
 
+button:hover {
+	background : red;
+	cursor : pointer;
+}
+
 #title {
 	text-align: center;
 }
@@ -101,7 +106,7 @@ input[type="submit"] {
 
 .tableSpace :nth-child(7n+1) {
 	margin: 0%;
- 			margin-right: -70px;
+ 	margin-right: -56px;
 }
 
 .tableSpace :nth-child(7n+2) {
@@ -132,7 +137,7 @@ input[type="submit"] {
 
 .tableContentSpace :nth-child(7n+1) {
 	margin: 0%;
- 			margin-right: -70px;
+ 	margin-right: -70px;
 }
 
 .tableContentSpace :nth-child(7n+2) {
