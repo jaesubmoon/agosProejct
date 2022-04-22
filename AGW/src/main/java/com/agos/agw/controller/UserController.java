@@ -243,11 +243,20 @@ public class UserController {
 		  return "/UserAdmin/detailView";
 	  }
 	  
-	  // 회원가입
-	  @RequestMapping(value="/userJoin")
-	  public String userJoin () {
+	  // 사원 신청 폼
+	  @RequestMapping(value="/joinForm")
+	  public String joinForm () {
 		  
 		  return "/joinView";
+	  }
+	  
+	  // 사원 신청
+	  @RequestMapping(value="/userJoin")
+	  public String userJoin(UserVO userVO) {
+		  	  
+		  service.insertUser(userVO);
+		  
+		  return "redirect:/userRequestList";
 	  }
 	  
 	  // 이메일 인증

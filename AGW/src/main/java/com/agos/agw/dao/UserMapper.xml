@@ -29,7 +29,7 @@
 		<result property="usr_address" column="usr_address" />
   	</resultMap>
   	
-  	<!-- 전체 사용자 조회 -->
+  	<!-- 전체 사원 조회 -->
   	<select id="listAllUser" resultMap="userResult">
   		SELECT
   			usr_idx, usr_id, usr_pw, usr_nm, usr_gender, usr_email, usr_crea_date, usr_position,
@@ -39,7 +39,7 @@
         WHERE usr_appr = 1
   	</select>
   	
-  	<!-- 총 사용자 수 계산 -->
+  	<!-- 총 사원 수 계산 -->
   	<select id="countUser" resultType="int" >
   		SELECT COUNT(*) FROM user_regist
   	</select>
@@ -60,7 +60,7 @@
 					WHERE RN BETWEEN #{start} AND #{end}
   	</select>
   	
-  	<!-- 사용자 검색 -->
+  	<!-- 사원 검색 -->
   	<select id="userSearch" parameterType="hashmap" resultMap="userResult">	
   		SELECT
   			usr_idx, usr_id, usr_pw, usr_nm, usr_gender, usr_email, usr_crea_date, usr_position,
@@ -113,13 +113,13 @@
 				
   	</select>
   	
-  	<!-- 사용자 수정 -->
+  	<!-- 사원 수정 -->
   	<update id="updateUser" parameterType="com.agos.agw.model.UserVO">
   		UPDATE user_regist SET usr_position =#{usr_position}, usr_right =#{usr_right}
   			WHERE usr_idx = #{usr_idx}
   	</update>
   	
-  	<!-- 사용자 삭제 -->
+  	<!-- 사원 삭제 -->
   	<delete id="deleteUser" parameterType="string">
   		DELETE FROM user_regist WHERE usr_idx = #{usr_idx}
   	</delete>
@@ -143,7 +143,7 @@
   		WHERE usr_appr = 0
   	</select>
   	
-  	<!-- 사용자 승인 : 승인 여부 값을 0에서 1로 업데이트 + 데이터 업데이트 -->
+  	<!-- 사원 승인 : 승인 여부 값을 0에서 1로 업데이트 + 데이터 업데이트 -->
   	<update id="approveUser" parameterType="com.agos.agw.model.UserVO">
   		UPDATE user_regist SET usr_position =#{usr_position}, usr_right =#{usr_right}, usr_appr = 1
   			WHERE usr_idx = #{usr_idx}
@@ -170,8 +170,15 @@
          AND usr_appr=1
   	</select>
   	
-  	<!-- 사용자 상세 정보  -->
+  	<!-- 사원 상세 정보  -->
   	<select id="userDetail" parameterType="int" resultMap="userResult">
   		SELECT * FROM user_regist WHERE usr_idx = #{usr_idx}
   	</select>
+  	
+  	<!-- 사원 등록 -->
+  	<insert id="insertUser" parameterType="com.agos.agw.model.UserVO">
+  		INSERT INTO user_regist 
+  				VALUES(#{usr_idx}, #{usr_id}, #{usr_pw}, #{usr_nm}, #{usr_gender}, #{usr_email}, now()
+  						, #{usr_position}, #{usr_right}, #{usr_appr}, #{usr_birth}, #{usr_phone}, #{usr_address} )
+  	</insert>
   </mapper>
